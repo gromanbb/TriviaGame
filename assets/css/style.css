@@ -1,0 +1,37 @@
+html {
+	box-sizing: border-box;
+}
+
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+body,
+.container {
+	text-align: center;
+}
+
+#start-button,
+.answers,
+#restart-button {
+	cursor: pointer;
+	display: block;
+	margin: 5px;
+	padding: 10px;
+	font-size: 30px;
+}
+
+#start-button {
+	width: 100%;
+}
+
+.answers {
+	width: 35%;
+}
+
+#restart-button {
+	width: 100%;
+}
+
+
+

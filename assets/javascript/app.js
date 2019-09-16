@@ -1,72 +1,86 @@
 // VARIABLES
 // ==============================================================================
-let gameTime = 90;                      // Aloted time for entire game (90 seconds)
-let questionTime = 30;                  // Aloted time for answering trivia question (30 seconds)
+let isFirstTimePlaying = false;			// Boolean for checking if it is the first time playing game
+let gameTime = 90;                      // Allotted time for entire game (90 seconds)
+let questionTime = 30;                  // Allotted time for answering trivia question (30 seconds)
 let intervalGame = 0;                   // Interval for playing game
 let intervalQuestion = 0;               // Interval for guessing trivia question
+let isGameTimeout = false;				// Boolean for checking game's timeout
+let isQuestionTimeout = false;			// Boolean for checking guessing question's timeout
+let strH3 = "";                         // String for displaying <h3> dynamically
+let strH4 = "";                         // String for displaying <h4> dynamically
 
 let arrTriviaDataLength = 0;            // Length of triviaData[]
 let compIndexQuestion = 0;              // Index (random number) pointing to chosen trivia question
-let compQuestion = "";                  // String for storing chosen trivia question
-let compAnswers = {};                   // Object for storing answers of chosen trivia question
+let compQuestion = "";                  // String for storing picked trivia question
+let compAnswers = [];                   // Array for storing answers of chosen trivia question
 let arrTriviaDataAnswersLength = 0      // Length of triviaData[].answers[]
 
+let userAnswer = "";                    // String for storing chosen answer
+let userAnswerIsCorrect = false;        // Boolean for validating chosen answer
+let gameStatusMsg = ""                  // String for messaging about game status
+let correctAnswerMsg = ""               // String for messaging about correct answer
+let correctAnswerImage = ""				// String for showing image of correct answer
+
+let corrects = 0;                       // Total for correct answers
+let incorrects = 0;                     // Total for incorrect answers
+let unaswered = 0;                      // Total for skipped answers
 
 let triviaData = [
-    {
-        "questionText": "What breed of dog was Marley in the film \"Marley \& Me\" (2008)?",
-        "answers": [
-            {"answerText": "Golden Retriever", "isCorrect": false},
-            {"answerText": "Dalmatian", "isCorrect": false},
-            {"answerText": "Labrador Retriever", "isCorrect": true},
-            {"answerText": "Shiba Inu", "isCorrect": false}
-        ]
-    },
-    {
-        "questionText": "Which of the following movies was not based on a novel by Stephen King?",
-        "answers": [
-            {"answerText": "The Thing", "isCorrect": true},
-            {"answerText": "Carrie", "isCorrect": false},
-            {"answerText": "The Green Mile", "isCorrect": false},
-            {"answerText": "Misery", "isCorrect": false}
-        ]
-    },
-    {
-        "questionText": "Daniel Radcliffe became a global star in the film industry due to his performance in which film franchise??",
-        "answers": [
-            {"answerText": "Pirates of the Caribbean", "isCorrect": false},
-            {"answerText": "Spy Kids", "isCorrect": false},
-            {"answerText": "Ted", "isCorrect": false},
-            {"answerText": "Harry Potter", "isCorrect": true}
-        ]
-    },
-    {
-        "questionText": "Who starred as Bruce Wayne and Batman in Tim Burton\'s 1989 movie \"Batman\"?",
-        "answers": [
-            {"answerText": "Val Kilmer", "isCorrect": false},
-            {"answerText": "Michael Keaton", "isCorrect": true},
-            {"answerText": "George Clooney", "isCorrect": false},
-            {"answerText": "Adam West", "isCorrect": false}
-        ]
-    },
-    {
-        "questionText": "Who directed \"E.T. the Extra-Terrestrial\" (1982)?",
-        "answers": [
-            {"answerText": "Stanley Kubrick", "isCorrect": false},
-            {"answerText": "James Cameron", "isCorrect": false},
-            {"answerText": "Steven Spielberg", "isCorrect": true},
-            {"answerText": "Tim Burton", "isCorrect": false}
-        ]
-    }/*, ojo                            LAST QUESTION
-    {
-        "questionText": "?",
-        "answers": [
-            {"answerText": "", "isCorrect": false},
-            {"answerText": "", "isCorrect": false},
-            {"answerText": "", "isCorrect": false},
-            {"answerText": "", "isCorrect": false}
-        ]        
-    }*/
+	{
+		"questionText": "What breed of dog was Marley in the film \"Marley \& Me\" (2008)?",
+		"answers": [
+			{"answerText": "Golden Retriever", "isCorrect": false},
+			{"answerText": "Dalmatian", "isCorrect": false},
+			{"answerText": "Labrador Retriever", "isCorrect": true},
+			{"answerText": "Shiba Inu", "isCorrect": false}
+		]
+	},
+	{
+		"questionText": "Which of the following movies was not based on a novel by Stephen King?",
+		"answers": [
+			{"answerText": "The Thing", "isCorrect": true},
+			{"answerText": "Carrie", "isCorrect": false},
+			{"answerText": "The Green Mile", "isCorrect": false},
+			{"answerText": "Misery", "isCorrect": false}
+		]
+	},
+	{
+		"questionText": "Daniel Radcliffe became a global star in the film industry due to his performance in which film franchise?",
+		"answers": [
+			{"answerText": "Pirates of the Caribbean", "isCorrect": false},
+			{"answerText": "Spy Kids", "isCorrect": false},
+			{"answerText": "Ted", "isCorrect": false},
+			{"answerText": "Harry Potter", "isCorrect": true}
+		]
+	},
+	{
+		"questionText": "Who starred as Bruce Wayne and Batman in Tim Burton\'s 1989 movie \"Batman\"?",
+		"answers": [
+			{"answerText": "Val Kilmer", "isCorrect": false},
+			{"answerText": "Michael Keaton", "isCorrect": true},
+			{"answerText": "George Clooney", "isCorrect": false},
+			{"answerText": "Adam West", "isCorrect": false}
+		]
+	},
+	{
+		"questionText": "Who directed \"E.T. the Extra-Terrestrial\" (1982)?",
+		"answers": [
+			{"answerText": "Stanley Kubrick", "isCorrect": false},
+			{"answerText": "James Cameron", "isCorrect": false},
+			{"answerText": "Steven Spielberg", "isCorrect": true},
+			{"answerText": "Tim Burton", "isCorrect": false}
+		]
+	}/*, ojo                            LAST QUESTION
+	{
+		"questionText": "",
+		"answers": [
+			{"answerText": "", "isCorrect": false},
+			{"answerText": "", "isCorrect": false},
+			{"answerText": "", "isCorrect": false},
+			{"answerText": "", "isCorrect": false}
+		]
+	}*/
 ];
 
 // FUNCTIONS
@@ -74,143 +88,305 @@ let triviaData = [
 
 // Function to decrement time remaining since game began
 function decrementGameTime() {
-    gameTime--;
-    console.log("Executed decrementGameTime() --> gameTime: " + gameTime);
-                            //ojo       Must have clearInterval() once the game has timed out!
-                            //          Must comment out console.log() when done!
+	gameTime--;
+	if (gameTime === 0) {
+		isGameTimeout = true;
+	}
 }
-
 
 // Function to decrement time remaining for guessing trivia question
 function decrementQuestionTime() {
-    questionTime--;
-    console.log("Executed decrementQuestionTime() --> questionTime: " + questionTime);
-                            //ojo       Must have clearInterval() once the question has timed!!!
-                            //          Must comment out console.log() when done!
+	questionTime--;
+	if (questionTime === 0) {
+		isQuestionTimeout = true;
+	}
+	else {
+		strH4 = "";
+		strH4 = "<h4>Time Remaining: " + questionTime + " Seconds</h4>";
+		$("#time-remaining").html(strH4);
+	}
 }
-
 
 // Function to generate random numbers between a max and a min value
 function generateRandom(min, max) {
-    console.log("Executed generateRandom() --> min:  " + min + ";  max:  " + max);
-                            // ojo      Must comment out console.log() when done! 
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+	console.log("Executed generateRandom() --> min:  " + min + ";  max:  " + max);
 
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // Function for picking trivia question and corresponding answers
 function pickQuestion() {
-    console.log("Executed pickQuestion() --> ");
+	console.log("Executed pickQuestion() --> ");
 
-    arrTriviaDataLength = 0;
-    compIndexQuestion = 0;
-    compQuestion = "";
-    compAnswers = {};
-    arrTriviaDataAnswersLenght = 0;
+	arrTriviaDataLength = 0;
+	compIndexQuestion = 0;
+	compQuestion = "";
+	arrTriviaDataAnswersLenght = 0;
 
-    // Length of triviaData[]
-    arrTriviaDataLength = triviaData.length;
-    console.log("arrTriviaDataLength: " + arrTriviaDataLength);
+	// Length of triviaData[]
+	arrTriviaDataLength = triviaData.length;
+	console.log("pickQuestion() --> arrTriviaDataLength: " + arrTriviaDataLength);
 
-    // Get random number between 0 and lenght of triviaData[] to chose question
-    compIndexQuestion = generateRandom(0, triviaData.length - 1);
-    compQuestion = triviaData[compIndexQuestion].questionText;
-    console.log("compIndexQuestion : " + compIndexQuestion);
-    console.log("compQuestion : " + compQuestion);
+	// Get random number between 0 and lenght of triviaData[] to chose question
+	compIndexQuestion = generateRandom(0, triviaData.length - 1);
+	compQuestion = triviaData[compIndexQuestion].questionText;
+	console.log("pickQuestion() --> compIndexQuestion : " + compIndexQuestion);
+	console.log("pickQuestion() --> compQuestion : " + compQuestion);
 
-    // Length of triviaData[].answers[]
-    arrTriviaDataAnswersLength = triviaData[compIndexQuestion].answers.length;
-    console.log("arrTriviaDataAnswersLength: " + arrTriviaDataAnswersLength);
+	// Length of triviaData[].answers[]
+	arrTriviaDataAnswersLength = triviaData[compIndexQuestion].answers.length;
+	console.log("pickQuestion() --> arrTriviaDataAnswersLength: " + arrTriviaDataAnswersLength);
 
-    // Load answers of chosen trivia question
-    for (var i = 0; i < arrTriviaDataAnswersLenght; i++) {
-        compAnswers[i] = {};                                    // Creates a new object
-        compAnswers[i].answerText = triviaData[compIndexQuestion].answers[i].answerText;
-        compAnswers[i].isCorrect = triviaData[compIndexQuestion].answers[i].isCorrect;
-        console.log("compAnswers[i].answerText : " + compAnswers[i].answerText);
-        console.log("compAnswers[i].isCorrect : " + compAnswers[i].isCorrect);
-    }
+	// Load answers of chosen trivia question
+	for (var i = 0; i < arrTriviaDataAnswersLength; i++) {
+		compAnswers.push({ answerText: triviaData[compIndexQuestion].answers[i].answerText, isCorrect: triviaData[compIndexQuestion].answers[i].isCorrect });
+		console.log("pickQuestion() --> compAnswers[i].answerText : " + compAnswers[i].answerText);
+		console.log("pickQuestion() --> compAnswers[i].isCorrect : " + compAnswers[i].isCorrect);
+	}
+}
 
+// Function to render trivia question's remaining time, plus question and answers (buttons)
+function renderQuestionAnswers() {
+	console.log("Executed renderQuestionAnswers() --> ");
 
+	// Display time remaining
+	strH4 = "";
+	strH4 = "<h4>Time Remaining: " + questionTime + " Seconds</h4>";
+	$("#time-remaining").html(strH4);
+
+	// Display chosen question
+	strH3 = "";
+	strH3 = "<h3 class=\"font-italic\">" + compQuestion + "</h3>";
+	$("#question-status").html(strH3);
+
+	$("#answers-buttons").empty();
+
+	// Display answers for chosen question
+	arrTriviaDataAnswersLength = triviaData[compIndexQuestion].answers.length;
+	for (var i = 0; i < arrTriviaDataAnswersLength; i++) {
+		// Create buttons dynamically for each answer to the trivia question
+		let newButton = $("<button>");
+		newButton.attr("type", "button");
+		newButton.addClass("answers");
+		newButton.addClass("btn btn-light btn-lg btn-block");
+		newButton.addClass("mx-auto");
+		newButton.attr("data-name", compAnswers[i].answerText);
+		newButton.html(compAnswers[i].answerText);
+		$("#answers-buttons").append(newButton);
+	}
+}
+
+// Function to validate chosen answer
+function validateAnswerChosen() {
+	console.log("Executed validateAnswerChosen() --> ");
+
+	userAnswerIsCorrect = false;
+	gameStatusMsg = "";
+	correctAnswerMsg = "";
+	correctAnswerImage = "";
+
+	for (var i = 0; i < compAnswers.length; i++) {
+		if (userAnswer === compAnswers[i].answerText) {
+			// ojo
+			console.log("validateAnswerChosen() --> compAnswers[i].answerText: " + compAnswers[i].answerText + "; i: " + i);
+			userAnswerIsCorrect = compAnswers[i].isCorrect;
+		}
+		if (compAnswers[i].isCorrect) {
+			correctAnswerMsg = "The correct answer was " + compAnswers[i].answerText;
+			correctAnswerImg = compAnswers[i].answerText;
+		}
+	}
+	console.log("validateAnswerChosen() --> userAnswerIsCorrect: " + userAnswerIsCorrect);
+
+	if (!isQuestionTimeout) {
+		if (userAnswerIsCorrect) {
+			// Answer was correct
+			corrects++;
+			gameStatusMsg = "Correct!";
+			correctAnswerMsg = "";
+		}
+		else {
+			// Answer was incorrect
+			incorrects++;
+			gameStatusMsg = "Nope!!!";
+		}
+	}
+	else {
+		// No buttons were clicked so question timed out
+		unaswered++;
+		gameStatusMsg = "Out of Time!";
+
+		// Reset time for answering trivia question back to 30 secons
+		questionTime = 30;
+		isQuestionTimeout = false;
+	}
+
+	// Display validation results
+	// Display time remaining
+	strH4 = "";
+	strH4 = "<h4>Time Remaining: " + questionTime + " Seconds</h4>";
+	$("#time-remaining").html(strH4);
+
+	$("#answers-buttons").empty();
+
+	// Display game status
+	strH3 = "";
+	strH3 = "<h3 class=\"font-italic\">" + gameStatusMsg + "</h3>";
+	$("#question-status").html(strH3);
+
+	// Display correct answer message
+	strH4 = "";
+	strH4 = "<h4>" + correctAnswerMsg + "!</h4>";
+	$("#answer-text").html(strH4);
+
+	// Display correct answer image
+	$("#answer-image").html("<img src=\"./../images/" + correctAnswerImage + ".jpg\" alt=\"" + correctAnswerImage + "\">");
 
 }
 
-// Function to kick off game
-function startGame() {
-    console.log("Executed startGame() after onclick of start button");
+// Function to clear place holders for dynamic HTML elements 
+function clearElements() {
+	console.log("Executed clearHtmlDivs() --> ");
 
-    // Set the timers for the game after 3 seconds
-    clearInterval(intervalGame);
-    intervalGame = setInterval(decrementGameTime, 3000);
-    clearInterval(intervalQuestion);
-    intervalQuestion = setInterval(decrementQuestionTime, 3000);
-
-    // Remove START button
-    $("#start-button").remove();
-
-    // Pick trivia question with answers
-    //ojo
-    console.log("question1:  " + triviaData[0].questionText);
-    console.log("answers1.text:  " + triviaData[0].answers.answerText[0]);
-    console.log("answers1.isCorrect:  " + triviaData[0].answers.isCorrect[0]);
-    console.log("question2:  " + triviaData[1].questionText);
-    console.log("answers2.text:  " + triviaData[1].answers.answerText[1]);
-    console.log("answers2.isCorrect:  " + triviaData[1].answers.isCorrect[1]);
-
-    // Display trivia question time remaining, question and answers (buttons)  
-
-
-
+	$("#start-button").empty();
+	$("#time-remaining").empty();
+	$("#answers-buttons").empty();
+	$("#question-status").empty();
+	$("#answer-text").empty();
+	$("#answer-image").empty();
+	$("#stats").empty();
+	$("#restart-button").empty();
 }
+
+// Function to display game Stats
+function displayStats() {
+	console.log("Executed displayStats() --> ");
+
+	$("#start-button").empty();
+	$("#answers-buttons").empty();
+	$("#question-status").empty();
+	$("#answer-text").empty();
+	$("#answer-image").empty();
+
+	// Display time remaining
+	strH4 = "";
+	strH4 = "<h4>Time Remaining: " + questionTime + " Seconds</h4>";
+	$("#time-remaining").html(strH4);
+
+	// Display total of correct, incorrect and skipped answers
+	strH4 = "";
+	strH4 = "<h4>Correct Answers: " + corrects + "</h4>";
+	$("#correct-answers").html(strH4);
+	strH4 = "";
+	strH4 = "<h4>Incorrect Answers: " + incorrects + "</h4>";
+	$("#incorrect-answers").html(strH4);
+	strH4 = "";
+	strH4 = "<h4>Unanswered: " + unaswered + "</h4>";
+	$("#skipped-answers").html(strH4);
+
+	// Display Start Over button
+	$("#restart-button").append("<button id=\"restart-button\" type=\"button\" class=\"btn btn-info btn-lg btn-block\">Start Over?</button>");
+}
+
 
 // MAIN PROCESS
 // ==============================================================================
 
 // Start game as soon as the page loads and set its timeout to 90 secs
-window.onload = (function() {
-    console.log("Main() --> Start of game!");
+window.onload = (function () {
+	console.log("main() --> Start of game!");
 
-    $("#start-button").append("<button id=\"start-button\">Start</button>");
+	isFirstTimePlaying = true;
 
-    $("#start-button").on("click", startGame);
+	$("#start-button").append("<button id=\"start-button\" type=\"button\" class=\"btn btn-info btn-lg btn-block\">Start</button>");
+
+	$("#start-button").on("click", function () {
+
+		if (isFirstTimePlaying) {
+
+			// Remove START button
+			$("#start-button").remove();
+
+			isFirstTimePlaying = false;
+		}
+
+		// Set the timers for the game after 1 second
+		clearInterval(intervalGame);
+		intervalGame = setInterval(decrementGameTime, 1000);
+		clearInterval(intervalQuestion);
+		intervalQuestion = setInterval(decrementQuestionTime, 1000);
+
+		// Pick trivia question with answers
+		pickQuestion();
+
+		// Render trivia question and answers (buttons)
+		renderQuestionAnswers();
+
+		// Add a click event listenerer for all dynamically generated buttons with the class .answers
+		$(document).on("click", ".answers", function () {
+
+			// Capture the answer to the trivia question from the button's data-attribute
+			userAnswer = "";
+			userAnswer = $(this).attr("data-name");
+			console.log("main() --> userAnswer: " + userAnswer);
+
+			// ojo
+			console.log("main() --> this:" + this);
+			console.log("main() --> gameTime: " + gameTime + ";	questionTime:" + questionTime);
+
+			// Check if game hasn't timed out yet
+			if (!isGameTimeout) {
+				// ojo
+				console.log("main() --> gameTime: " + gameTime);
+				console.log("main() --> questionTime: " + questionTime);
+
+				// Validate answer chosen for trivia question and display results
+				validateAnswerChosen();
+
+				// Clear dynamic HTML elements
+				clearElements();
+
+				// Pick NEXT trivia question with answers
+				pickQuestion();
+
+				// Render NEXT trivia question and answers (buttons)
+				renderQuestionAnswers();
+
+			}
+			else {                                                      // Game Timed Out!
+
+				// Display game Stats
+				displayStats();
+
+				isGameTimeout = false;
+
+				// Clear game timers
+				clearInterval(intervalGame);
+				clearInterval(intervalQuestion);
+
+				$("#restart-button").on("click", function () {
+
+					// Remove RESTART button
+					$("#restart-button").remove();
+
+					// Reset timers
+					gameTime = 90; 
+					questionTime = 30;
+
+					// Set the timers for the game after 1 second
+					clearInterval(intervalGame);
+					intervalGame = setInterval(decrementGameTime, 1000);
+					clearInterval(intervalQuestion);
+					intervalQuestion = setInterval(decrementQuestionTime, 1000);
+
+				});
+			}
+		});
+	});
 });
 
 
 
 
-        // Reset game
-        // Set game timeout - First Interval (For starting over) -> decrement interval by 90 secs
-        // Pick trivia question + answers
-        // Display trivia question timeout and question + answers (buttons)
-        // Set trivia question timeout - Second Interval (For next question) -> decrement interval by 30 secs
 
-        // On click ANSWERS buttons (any button) FUNCTION
-
-            // If game timeout > 0
-                // ojo --- pause game timeout???
-                // Validate answer
-                    // Check if trivia question timeout (skipped answer)
-                    // Check if answer is correct
-                    // Check if answer is incorrect
-                    // Display trivia question timeout + status + correct answer msg + image of correct answer
-                // Display Trivia timeout and results
-
-                // Set delay after display of results - Third Interval (For next question) -> decrement interval by 3 secs
-                // ojo --- resume game timeout???
-
-                // Pick trivia question + answers
-                // Display trivia question timeout and question + answers (buttons)
-                // Reset second interval back to 30 seconds to continue game with next question
-
-            // else (Game time out!)
-                // Display game stats
-                // Set delay after display of game status - Fourth Interval (For Start Over button) -> decrement by 3 secs
-                // Display Start Over button
-
-                // On click Start Over button
-
-                    // Reset first interval back to 90 seconds to continue with game
-                    // Pick trivia question + answers
-                    // Display trivia question timeout and question + answers (buttons)
-                    // Reset second interval back to 30 seconds to continue game with next question              
 
