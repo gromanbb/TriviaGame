@@ -5,6 +5,7 @@ let gameTime = 90;                      // Allotted time for entire game (90 sec
 let questionTime = 30;                  // Allotted time for answering trivia question (30 seconds)
 let intervalGame = 0;                   // Interval for playing game
 let intervalQuestion = 0;               // Interval for guessing trivia question
+let delayGame;							// Delay game for 3 seconds to display results
 let isGameTimeout = false;				// Boolean for checking game's timeout
 let isQuestionTimeout = false;			// Boolean for checking guessing question's timeout
 let strH3 = "";                         // String for displaying <h3> dynamically
@@ -233,6 +234,12 @@ let triviaData = [
 // FUNCTIONS
 // ==============================================================================
 
+// Function to adjust timers after delaying game for 3 seconds
+function adjustTimers() {
+	gameTime += 3;
+	questionTime +=3;
+}
+
 // Function to decrement time remaining since game began
 function decrementGameTime() {
 	gameTime--;
@@ -249,21 +256,21 @@ function decrementQuestionTime() {
 	}
 	else {
 		strH4 = "";
-		strH4 = "<h4>Time Remaining: " + questionTime + " Seconds</h4>";
+		strH4 = "<h4 id=\"time-remaining\">Time Remaining: " + questionTime + " Seconds</h4>";
 		$("#time-remaining").html(strH4);
 	}
 }
 
 // Function to generate random numbers between a max and a min value
 function generateRandom(min, max) {
-	console.log("Executed generateRandom() --> min:  " + min + ";  max:  " + max);
+	//console.log("Executed generateRandom() --> min:  " + min + ";  max:  " + max);
 
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // Function for picking trivia question and corresponding answers
 function pickQuestion() {
-	console.log("Executed pickQuestion() --> ");
+	//console.log("Executed pickQuestion() --> ");
 
 	arrTriviaDataLength = 0;
 	compIndexQuestion = 0;
@@ -274,42 +281,36 @@ function pickQuestion() {
 
 	// Length of triviaData[]
 	arrTriviaDataLength = triviaData.length;
-	console.log("pickQuestion() --> arrTriviaDataLength: " + arrTriviaDataLength);
 
 	// Get random number between 0 and lenght of triviaData[] to chose question
 	compIndexQuestion = generateRandom(0, triviaData.length - 1);
 	compQuestion = triviaData[compIndexQuestion].questionText;
-	console.log("pickQuestion() --> compIndexQuestion : " + compIndexQuestion);
-	console.log("pickQuestion() --> compQuestion : " + compQuestion);
 
 	// Length of triviaData[].answers[]
 	arrTriviaDataAnswersLength = triviaData[compIndexQuestion].answers.length;
-	console.log("pickQuestion() --> arrTriviaDataAnswersLength: " + arrTriviaDataAnswersLength);
 
 	// Load answers of chosen trivia question
 	for (var i = 0; i < arrTriviaDataAnswersLength; i++) {
 		compAnswers.push({ answerText: triviaData[compIndexQuestion].answers[i].answerText, isCorrect: triviaData[compIndexQuestion].answers[i].isCorrect });
-		console.log("pickQuestion() --> compAnswers[i].answerText : " + compAnswers[i].answerText);
-		console.log("pickQuestion() --> compAnswers[i].isCorrect : " + compAnswers[i].isCorrect);
 	}
 
 	// Load image of chosen trivia question
 	compImageName = triviaData[compIndexQuestion].imageName;
-	console.log("pickQuestion() --> compImageName : " + compImageName);
+
 }
 
 // Function to render trivia question's remaining time, plus question and answers (buttons)
 function renderQuestionAnswers() {
-	console.log("Executed renderQuestionAnswers() --> ");
+	//console.log("Executed renderQuestionAnswers() --> ");
 
 	// Display time remaining
 	strH4 = "";
-	strH4 = "<h4>Time Remaining: " + questionTime + " Seconds</h4>";
+	strH4 = "<h4 id=\"time-remaining\">Time Remaining: " + questionTime + " Seconds</h4>";
 	$("#time-remaining").html(strH4);
 
 	// Display chosen question
 	strH3 = "";
-	strH3 = "<h3 class=\"font-italic\">" + compQuestion + "</h3>";
+	strH3 = "<h3 id=\"question-status\" class=\"font-italic\">" + compQuestion + "</h3>";
 	$("#question-status").html(strH3);
 
 	$("#answers-buttons").empty();
@@ -340,8 +341,6 @@ function validateAnswerChosen() {
 
 	for (var i = 0; i < compAnswers.length; i++) {
 		if (userAnswer === compAnswers[i].answerText) {
-			// ojo
-			console.log("validateAnswerChosen() --> compAnswers[i].answerText: " + compAnswers[i].answerText + "; i: " + i);
 			userAnswerIsCorrect = compAnswers[i].isCorrect;
 		}
 		if (compAnswers[i].isCorrect) {
@@ -349,7 +348,9 @@ function validateAnswerChosen() {
 			correctAnswerImg = compAnswers[i].answerText;
 		}
 	}
-	console.log("validateAnswerChosen() --> userAnswerIsCorrect: " + userAnswerIsCorrect);
+	// Debugging
+	//console.log("validateAnswerChosen() --> userAnswerIsCorrect: " + userAnswerIsCorrect);
+	//console.log("isQuestionTimeout: " + isQuestionTimeout);
 
 	if (!isQuestionTimeout) {
 		if (userAnswerIsCorrect) {
@@ -370,27 +371,47 @@ function validateAnswerChosen() {
 		gameStatusMsg = "Out of Time!";
 		isQuestionTimeout = false;
 	}
+	// Debugging
+	// console.log("corrects: " + corrects + "; incorrects: " + incorrects + "; unanswered: " + unaswered);
+	// console.log("gameStatusMsg: " + gameStatusMsg);
+	// console.log("correctAnswerMsg: " + correctAnswerMsg);
+
 
 	// Display validation results
+	// Clear start button
+	$("#start-button").empty();
+
 	// Display time remaining
 	strH4 = "";
-	strH4 = "<h4>Time Remaining: " + questionTime + " Seconds</h4>";
+	strH4 = "<h4 id=\"time-remaining\">Time Remaining: " + questionTime + " Seconds</h4>";
+	// Debugging
+	console.log("strH4: " + strH4);
 	$("#time-remaining").html(strH4);
-
-	$("#answers-buttons").empty();
 
 	// Display game status
 	strH3 = "";
-	strH3 = "<h3 class=\"font-italic\">" + gameStatusMsg + "</h3>";
+	strH3 = "<h3 id=\"question-status\" class=\"font-italic\">" + gameStatusMsg + "</h3>";
+	// Debugging
+	console.log("strH3: " + strH3);
 	$("#question-status").html(strH3);
+
+	// Clear the answers buttons
+	$("#answers-buttons").empty();
 
 	// Display correct answer message
 	strH4 = "";
-	strH4 = "<h4>" + correctAnswerMsg + "!</h4>";
+	strH4 = "<h4 id=\"answer-text\">" + correctAnswerMsg + "!</h4>";
+	// Debugging
+	console.log("strH4: " + strH4);
 	$("#answer-text").html(strH4);
 
 	// Display correct answer image
-	$("#answer-image").html("<img src=\"./assets/images/" + compImageName + "\">");
+	// Debugging
+	console.log("compImageName: " + compImageName);
+	$("#answer-image").html("<img id=\"answer-image\" src=\"./assets/images/" + compImageName + "\">");
+
+	// Wait for 3 seconds
+	delayGame = setTimeout(adjustTimers(), 3000);
 
 }
 
@@ -410,7 +431,7 @@ function clearElements() {
 
 // Function to display game Stats
 function displayStats() {
-	console.log("Executed displayStats() --> ");
+	//console.log("Executed displayStats() --> ");
 
 	$("#start-button").empty();
 	$("#answers-buttons").empty();
@@ -420,79 +441,76 @@ function displayStats() {
 
 	// Display time remaining
 	strH4 = "";
-	strH4 = "<h4>Time Remaining: " + questionTime + " Seconds</h4>";
+	strH4 = "<h4 id=\"time-remaining\">Time Remaining: " + questionTime + " Seconds</h4>";
 	$("#time-remaining").html(strH4);
 
 	// Display total of correct, incorrect and skipped answers
 	strH4 = "";
-	strH4 = "<h4>Correct Answers: " + corrects + "</h4>";
+	strH4 = "<h4 id=\"correct-answers\">Correct Answers: " + corrects + "</h4>";
 	$("#correct-answers").html(strH4);
 	strH4 = "";
-	strH4 = "<h4>Incorrect Answers: " + incorrects + "</h4>";
+	strH4 = "<h4 id=\"incorrect-answers\">Incorrect Answers: " + incorrects + "</h4>";
 	$("#incorrect-answers").html(strH4);
 	strH4 = "";
-	strH4 = "<h4>Unanswered: " + unaswered + "</h4>";
+	strH4 = "<h4 id=\"skipped-answers\">Unanswered: " + unaswered + "</h4>";
 	$("#skipped-answers").html(strH4);
 
 	// Display Start Over button
 	$("#restart-button").append("<button id=\"restart-button\" type=\"button\" class=\"btn btn-info btn-lg btn-block\">Start Over?</button>");
-}
 
+	// Wait for 3 seconds
+	delayGame = setTimeout(adjustTimers(), 3000);
+
+}
 
 // MAIN PROCESS
 // ==============================================================================
 
 // Start game as soon as the page loads and set its timeout to 90 secs
 window.onload = (function () {
-	console.log("main() --> Start of game!");
 
-	isFirstTimePlaying = true;
+	// Check if game hasn't timed out yet
+	if (!isGameTimeout) {
+	
+		//console.log("main() --> Start of game!");
 
-	$("#start-button").append("<button id=\"start-button\" type=\"button\" class=\"btn btn-info btn-lg btn-block\">Start</button>");
+		$("#start-button").append("<button id=\"start-button\" type=\"button\" class=\"btn btn-info btn-lg btn-block\">Start</button>");
 
-	$("#start-button").on("click", function () {
+		$("#start-button").on("click", function () {
 
-		if (isFirstTimePlaying) {
+			if (isFirstTimePlaying) {
 
-			// Remove START button
-			$("#start-button").remove();
+				// Clear START button
+				$("#start-button").empty();
 
-			isFirstTimePlaying = false;
-		}
+				isFirstTimePlaying = false;
+			}
 
-		// Set the timers for the game after 1 second
-		clearInterval(intervalGame);
-		intervalGame = setInterval(decrementGameTime, 1000);
-		clearInterval(intervalQuestion);
-		intervalQuestion = setInterval(decrementQuestionTime, 1000);
+			// Set the timers for the game after 1 second
+			clearInterval(intervalGame);
+			intervalGame = setInterval(decrementGameTime, 1000);
+			clearInterval(intervalQuestion);
+			intervalQuestion = setInterval(decrementQuestionTime, 1000);
 
-		// Pick trivia question with answers
-		pickQuestion();
+			// Pick trivia question with answers
+			pickQuestion();
 
-		// Render trivia question and answers (buttons)
-		renderQuestionAnswers();
+			// Render trivia question and answers (buttons)
+			renderQuestionAnswers();
 
-		// Add a click event listenerer for all dynamically generated buttons with the class .answers
-		$(document).on("click", ".answers", function () {
+			// Add a click event listenerer for all dynamically generated buttons with the class .answers
+			$(document).on("click", ".answers", function () {
 
-			// Capture the answer to the trivia question from the button's data-attribute
-			userAnswer = "";
-			userAnswer = $(this).attr("data-name");
-			console.log("main() --> userAnswer: " + userAnswer);
-
-			// ojo
-			console.log("main() --> this:" + this);
-			console.log("main() --> gameTime: " + gameTime + ";	questionTime:" + questionTime);
-
-			// Check if game hasn't timed out yet
-			if (!isGameTimeout) {
-				// ojo
-				console.log("main() --> gameTime: " + gameTime);
-				console.log("main() --> questionTime: " + questionTime);
+				// Capture the answer to the trivia question from the button's data-attribute
+				userAnswer = "";
+				userAnswer = $(this).attr("data-name");
+				// Debugging
+				//console.log("main() --> userAnswer: " + userAnswer);
 
 				// Validate answer chosen for trivia question and display results
 				validateAnswerChosen();
-					
+				clearTimeout(delayGame);
+
 				// Clear dynamic HTML elements
 				clearElements();
 
@@ -504,45 +522,41 @@ window.onload = (function () {
 
 				// Render NEXT trivia question and answers (buttons)
 				renderQuestionAnswers();
-
-			}
-			else {                                                      // Game Timed Out!
-
-				// Clear dynamic HTML elements
-				clearElements();
-
-				// Display game Stats
-				displayStats();
-
-				isGameTimeout = false;
-
-				// Clear game timers
-				clearInterval(intervalGame);
-				clearInterval(intervalQuestion);
-
-				$("#restart-button").on("click", function () {
-
-					// Remove RESTART button
-					$("#restart-button").remove();
-
-					// Reset timers
-					gameTime = 90; 
-					questionTime = 30;
-
-					// Set the timers for the game after 1 second
-					clearInterval(intervalGame);
-					intervalGame = setInterval(decrementGameTime, 1000);
-					clearInterval(intervalQuestion);
-					intervalQuestion = setInterval(decrementQuestionTime, 1000);
-
-				});
-			}
+			});
 		});
-	});
+	}
+	else {                                                      // Game Timed Out!
+
+		// Clear dynamic HTML elements
+		clearElements();
+
+		// Display game Stats
+		displayStats();
+		clearTimeout(delayGame);
+
+		isGameTimeout = false;
+
+		// Clear game timers
+		clearInterval(intervalGame);
+		clearInterval(intervalQuestion);
+
+		$("#restart-button").on("click", function () {
+
+			// Clear RESTART button
+			$("#restart-button").empty();
+
+			// Reset timers
+			gameTime = 90; 
+			questionTime = 30;
+
+			// Set the timers for the game after 1 second
+			clearInterval(intervalGame);
+			intervalGame = setInterval(decrementGameTime, 1000);
+			clearInterval(intervalQuestion);
+			intervalQuestion = setInterval(decrementQuestionTime, 1000);
+		});
+	}
 });
-
-
-
 
 
 
