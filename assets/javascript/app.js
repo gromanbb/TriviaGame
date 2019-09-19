@@ -5,11 +5,11 @@ let gameTime = 90;                      // Allotted time for entire game (90 sec
 let questionTime = 30;                  // Allotted time for answering trivia question (30 seconds)
 let intervalGame = 0;                   // Interval for playing game
 let intervalQuestion = 0;               // Interval for guessing trivia question
-let delayGame;							// Delay game for 3 seconds to display results
 let isGameTimeout = false;				// Boolean for checking game's timeout
 let isQuestionTimeout = false;			// Boolean for checking guessing question's timeout
 let strH3 = "";                         // String for displaying <h3> dynamically
 let strH4 = "";                         // String for displaying <h4> dynamically
+let strIMG = "";						// String for displaying <img> dynamically
 
 let arrTriviaDataLength = 0;            // Length of triviaData[]
 let compIndexQuestion = 0;              // Index (random number) pointing to chosen trivia question
@@ -32,200 +32,200 @@ let triviaData = [
 	{
 		"questionText": "What breed of dog was Marley in the film \"Marley \& Me\" (2008)?",
 		"answers": [
-			{"answerText": "Golden Retriever", "isCorrect": false},
-			{"answerText": "Dalmatian", "isCorrect": false},
-			{"answerText": "Labrador Retriever", "isCorrect": true},
-			{"answerText": "Shiba Inu", "isCorrect": false}
+			{ "answerText": "Golden Retriever", "isCorrect": false },
+			{ "answerText": "Dalmatian", "isCorrect": false },
+			{ "answerText": "Labrador Retriever", "isCorrect": true },
+			{ "answerText": "Shiba Inu", "isCorrect": false }
 		],
 		"imageName": "Marley&Me.jpg"
 	},
 	{
 		"questionText": "Which of the following movies was not based on a novel by Stephen King?",
 		"answers": [
-			{"answerText": "The Thing", "isCorrect": true},
-			{"answerText": "Carrie", "isCorrect": false},
-			{"answerText": "The Green Mile", "isCorrect": false},
-			{"answerText": "Misery", "isCorrect": false}
+			{ "answerText": "The Thing", "isCorrect": true },
+			{ "answerText": "Carrie", "isCorrect": false },
+			{ "answerText": "The Green Mile", "isCorrect": false },
+			{ "answerText": "Misery", "isCorrect": false }
 		],
 		"imageName": "TheThing.jpg"
 	},
 	{
 		"questionText": "Daniel Radcliffe became a global star in the film industry due to his performance in which film franchise?",
 		"answers": [
-			{"answerText": "Pirates of the Caribbean", "isCorrect": false},
-			{"answerText": "Spy Kids", "isCorrect": false},
-			{"answerText": "Ted", "isCorrect": false},
-			{"answerText": "Harry Potter", "isCorrect": true}
+			{ "answerText": "Pirates of the Caribbean", "isCorrect": false },
+			{ "answerText": "Spy Kids", "isCorrect": false },
+			{ "answerText": "Ted", "isCorrect": false },
+			{ "answerText": "Harry Potter", "isCorrect": true }
 		],
 		"imageName": "HarryPotter.jpg"
 	},
 	{
 		"questionText": "Who starred as Bruce Wayne and Batman in Tim Burton\'s 1989 movie \"Batman\"?",
 		"answers": [
-			{"answerText": "Val Kilmer", "isCorrect": false},
-			{"answerText": "Michael Keaton", "isCorrect": true},
-			{"answerText": "George Clooney", "isCorrect": false},
-			{"answerText": "Adam West", "isCorrect": false}
+			{ "answerText": "Val Kilmer", "isCorrect": false },
+			{ "answerText": "Michael Keaton", "isCorrect": true },
+			{ "answerText": "George Clooney", "isCorrect": false },
+			{ "answerText": "Adam West", "isCorrect": false }
 		],
 		"imageName": "Batman.jpg"
 	},
 	{
 		"questionText": "Who directed \"E.T. the Extra-Terrestrial\" (1982)?",
 		"answers": [
-			{"answerText": "Stanley Kubrick", "isCorrect": false},
-			{"answerText": "James Cameron", "isCorrect": false},
-			{"answerText": "Steven Spielberg", "isCorrect": true},
-			{"answerText": "Tim Burton", "isCorrect": false}
+			{ "answerText": "Stanley Kubrick", "isCorrect": false },
+			{ "answerText": "James Cameron", "isCorrect": false },
+			{ "answerText": "Steven Spielberg", "isCorrect": true },
+			{ "answerText": "Tim Burton", "isCorrect": false }
 		],
 		"imageName": "ET.jpg"
 	},
 	{
 		"questionText": "What is the highest grossing film of all time (without adjusting for inflation)?",
 		"answers": [
-			{"answerText": "Avatar", "isCorrect": true},
-			{"answerText": "Jurassic World", "isCorrect": false},
-			{"answerText": "Star Wars: The Force Awakens", "isCorrect": false},
-			{"answerText": "Titanic", "isCorrect": false}
+			{ "answerText": "Avatar", "isCorrect": true },
+			{ "answerText": "Jurassic World", "isCorrect": false },
+			{ "answerText": "Star Wars: The Force Awakens", "isCorrect": false },
+			{ "answerText": "Titanic", "isCorrect": false }
 		],
 		"imageName": "Avatar.jpg"
 	},
 	{
 		"questionText": "Which animated movie was first to feature a celebrity as a voice actor?",
 		"answers": [
-			{"answerText": "Toy Story", "isCorrect": false},
-			{"answerText": "Aladdin", "isCorrect": true},
-			{"answerText": "James and the Giant Peach", "isCorrect": false},
-			{"answerText": "The Hunchback of Notre Dame", "isCorrect": false}
+			{ "answerText": "Toy Story", "isCorrect": false },
+			{ "answerText": "Aladdin", "isCorrect": true },
+			{ "answerText": "James and the Giant Peach", "isCorrect": false },
+			{ "answerText": "The Hunchback of Notre Dame", "isCorrect": false }
 		],
-		"imageName": "Allading.jpg"
+		"imageName": "Alladin.jpg"
 	},
-		{
+	{
 		"questionText": "When was the movie \"Con Air\" released?",
 		"answers": [
-			{"answerText": "1999", "isCorrect": false},
-			{"answerText": "1985", "isCorrect": false},
-			{"answerText": "1997", "isCorrect": true},
-			{"answerText": "1990", "isCorrect": false}
+			{ "answerText": "1999", "isCorrect": false },
+			{ "answerText": "1985", "isCorrect": false },
+			{ "answerText": "1997", "isCorrect": true },
+			{ "answerText": "1990", "isCorrect": false }
 		],
 		"imageName": "ConAir.jpg"
 	},
-		{
+	{
 		"questionText": "Who wrote and directed the 1986 film \"Platoon\"?",
 		"answers": [
-			{"answerText": "Francis Ford Coppola", "isCorrect": false},
-			{"answerText": "Michael Cimino", "isCorrect": false},
-			{"answerText": "Stanley Kubrick", "isCorrect": false},
-			{"answerText": "Oliver Stone", "isCorrect": true}
+			{ "answerText": "Francis Ford Coppola", "isCorrect": false },
+			{ "answerText": "Michael Cimino", "isCorrect": false },
+			{ "answerText": "Stanley Kubrick", "isCorrect": false },
+			{ "answerText": "Oliver Stone", "isCorrect": true }
 		],
 		"imageName": "Platoon.jpg"
 	},
-		{
+	{
 		"questionText": "Who played Deputy Marshal Samuel Gerard in the 1993 film \"The Fugitive\"?",
 		"answers": [
-			{"answerText": "Tommy Lee Jones", "isCorrect": true},
-			{"answerText": "Harrison Ford", "isCorrect": false},
-			{"answerText": "Harvey Keitel", "isCorrect": false},
-			{"answerText": "Martin Landau", "isCorrect": false}
+			{ "answerText": "Tommy Lee Jones", "isCorrect": true },
+			{ "answerText": "Harrison Ford", "isCorrect": false },
+			{ "answerText": "Harvey Keitel", "isCorrect": false },
+			{ "answerText": "Martin Landau", "isCorrect": false }
 		],
 		"imageName": "TheFugitive.jpg"
 	},
-		{
+	{
 		"questionText": "Which actress danced the twist with John Travolta in \"Pulp Fiction\"?",
 		"answers": [
-			{"answerText": "Kathy Griffin", "isCorrect": false},
-			{"answerText": "Uma Thurman", "isCorrect": true},
-			{"answerText": "Pam Grier", "isCorrect": false},
-			{"answerText": "Bridget Fonda", "isCorrect": false}
+			{ "answerText": "Kathy Griffin", "isCorrect": false },
+			{ "answerText": "Uma Thurman", "isCorrect": true },
+			{ "answerText": "Pam Grier", "isCorrect": false },
+			{ "answerText": "Bridget Fonda", "isCorrect": false }
 		],
 		"imageName": "PulpFiction.jpg"
 	},
-		{
+	{
 		"questionText": "Who directed the movies \"Pulp Fiction\", \"Reservoir Dogs\" and \"Django Unchained\"?",
 		"answers": [
-			{"answerText": "Martin Scorcese", "isCorrect": false},
-			{"answerText": "Steven Spielberg", "isCorrect": false},
-			{"answerText": "Quentin Tarantino", "isCorrect": true},
-			{"answerText": "James Cameron", "isCorrect": false}
+			{ "answerText": "Martin Scorcese", "isCorrect": false },
+			{ "answerText": "Steven Spielberg", "isCorrect": false },
+			{ "answerText": "Quentin Tarantino", "isCorrect": true },
+			{ "answerText": "James Cameron", "isCorrect": false }
 		],
 		"imageName": "QuentinTarantino.jpg"
 	},
-		{
+	{
 		"questionText": "Who directed the 2015 movie \"The Revenant\"?",
 		"answers": [
-			{"answerText": "Christopher Nolan", "isCorrect": false},
-			{"answerText": "David Fincher", "isCorrect": false},
-			{"answerText": "Wes Anderson", "isCorrect": false},
-			{"answerText": "Alejandro G. Iñárritu", "isCorrect": false}
+			{ "answerText": "Christopher Nolan", "isCorrect": false },
+			{ "answerText": "David Fincher", "isCorrect": false },
+			{ "answerText": "Wes Anderson", "isCorrect": false },
+			{ "answerText": "Alejandro G. Iñárritu", "isCorrect": false }
 		],
 		"imageName": "TheRevenant.jpg"
 	},
-		{
+	{
 		"questionText": "This movie contains the quote, \"I feel the need ... the need for speed!\"",
 		"answers": [
-			{"answerText": "Top Gun", "isCorrect": true},
-			{"answerText": "Days of Thunder", "isCorrect": false},
-			{"answerText": "The Color of Money", "isCorrect": false},
-			{"answerText": "Cocktail", "isCorrect": false}
+			{ "answerText": "Top Gun", "isCorrect": true },
+			{ "answerText": "Days of Thunder", "isCorrect": false },
+			{ "answerText": "The Color of Money", "isCorrect": false },
+			{ "answerText": "Cocktail", "isCorrect": false }
 		],
 		"imageName": "TopGun.jpg"
 	},
-		{
+	{
 		"questionText": "What was the first James Bond film?",
 		"answers": [
-			{"answerText": "Goldfinger", "isCorrect": false},
-			{"answerText": "Dr. No", "isCorrect": true},
-			{"answerText": "From Russia With Love", "isCorrect": false},
-			{"answerText": "Thunderball", "isCorrect": false}
+			{ "answerText": "Goldfinger", "isCorrect": false },
+			{ "answerText": "Dr. No", "isCorrect": true },
+			{ "answerText": "From Russia With Love", "isCorrect": false },
+			{ "answerText": "Thunderball", "isCorrect": false }
 		],
 		"imageName": "DrNo.jpg"
 	},
-		{
+	{
 		"questionText": "This movie contains the quote, \"Nobody puts Baby in a corner.\"",
 		"answers": [
-			{"answerText": "Three Men and a Baby", "isCorrect": false},
-			{"answerText": "Ferris Bueller\'s Day Off", "isCorrect": false},
-			{"answerText": "Dirty Dancing", "isCorrect": true},
-			{"answerText": "Pretty in Pink", "isCorrect": false}
+			{ "answerText": "Three Men and a Baby", "isCorrect": false },
+			{ "answerText": "Ferris Bueller\'s Day Off", "isCorrect": false },
+			{ "answerText": "Dirty Dancing", "isCorrect": true },
+			{ "answerText": "Pretty in Pink", "isCorrect": false }
 		],
 		"imageName": "DirtyDancing.jpg"
 	},
 	{
 		"questionText": "Which of these actors/actresses is NOT a part of the cast for the 2016 movie \"Suicide Squad\"?",
 		"answers": [
-			{"answerText": "Jared Leto", "isCorrect": false},
-			{"answerText": "Will Smith", "isCorrect": false},
-			{"answerText": "Margot Robbie", "isCorrect": false},
-			{"answerText": "Scarlett Johansson", "isCorrect": true}
+			{ "answerText": "Jared Leto", "isCorrect": false },
+			{ "answerText": "Will Smith", "isCorrect": false },
+			{ "answerText": "Margot Robbie", "isCorrect": false },
+			{ "answerText": "Scarlett Johansson", "isCorrect": true }
 		],
 		"imageName": "SuicideSquad.jpg"
 	},
-		{
+	{
 		"questionText": "Which of these movies did Jeff Bridges not star in?",
 		"answers": [
-			{"answerText": "The Hateful Eight", "isCorrect": true},
-			{"answerText": "Tron: Legacy", "isCorrect": false},
-			{"answerText": "The Giver", "isCorrect": false},
-			{"answerText": "True Grit", "isCorrect": false}
+			{ "answerText": "The Hateful Eight", "isCorrect": true },
+			{ "answerText": "Tron: Legacy", "isCorrect": false },
+			{ "answerText": "The Giver", "isCorrect": false },
+			{ "answerText": "True Grit", "isCorrect": false }
 		],
 		"imageName": "TheHatefulEight.jpg"
 	},
-		{
+	{
 		"questionText": "Who plays Alice in the Resident Evil movies?",
 		"answers": [
-			{"answerText": "Milla Johnson", "isCorrect": false},
-			{"answerText": "Milla Jovovich", "isCorrect": true},
-			{"answerText": "Madison Derpe", "isCorrect": false},
-			{"answerText": "Kim Demp", "isCorrect": false}
+			{ "answerText": "Milla Johnson", "isCorrect": false },
+			{ "answerText": "Milla Jovovich", "isCorrect": true },
+			{ "answerText": "Madison Derpe", "isCorrect": false },
+			{ "answerText": "Kim Demp", "isCorrect": false }
 		],
 		"imageName": "ResidentEvil.jpg"
 	},
 	{
 		"questionText": "What is the oldest Disney film?",
 		"answers": [
-			{"answerText": "Pinocchio", "isCorrect": false},
-			{"answerText": "Dumbo", "isCorrect": false},
-			{"answerText": "Snow White and the Seven Dwarfs", "isCorrect": true},
-			{"answerText": "Fantasia", "isCorrect": false}
+			{ "answerText": "Pinocchio", "isCorrect": false },
+			{ "answerText": "Dumbo", "isCorrect": false },
+			{ "answerText": "Snow White and the Seven Dwarfs", "isCorrect": true },
+			{ "answerText": "Fantasia", "isCorrect": false }
 		],
 		"imageName": "SnowWhite.jpg"
 	}
@@ -233,12 +233,6 @@ let triviaData = [
 
 // FUNCTIONS
 // ==============================================================================
-
-// Function to adjust timers after delaying game for 3 seconds
-function adjustTimers() {
-	gameTime += 3;
-	questionTime +=3;
-}
 
 // Function to decrement time remaining since game began
 function decrementGameTime() {
@@ -296,7 +290,6 @@ function pickQuestion() {
 
 	// Load image of chosen trivia question
 	compImageName = triviaData[compIndexQuestion].imageName;
-
 }
 
 // Function to render trivia question's remaining time, plus question and answers (buttons)
@@ -327,7 +320,7 @@ function renderQuestionAnswers() {
 		newButton.attr("data-name", compAnswers[i].answerText);
 		newButton.html(compAnswers[i].answerText);
 		$("#answers-buttons").append(newButton);
-	}
+	}	
 }
 
 // Function to validate chosen answer
@@ -376,7 +369,6 @@ function validateAnswerChosen() {
 	// console.log("gameStatusMsg: " + gameStatusMsg);
 	// console.log("correctAnswerMsg: " + correctAnswerMsg);
 
-
 	// Display validation results
 	// Clear start button
 	$("#start-button").empty();
@@ -398,20 +390,22 @@ function validateAnswerChosen() {
 	// Clear the answers buttons
 	$("#answers-buttons").empty();
 
+	
+	// Display correct answer image
+	strIMG = "";
+	strIMG = "<img id=\"answer-image\" src=\"./assets/images/" + compImageName + "\">";
+	$("#answer-image").html(strIMG);
+	// Debugging
+	console.log("compImageName: " + compImageName);
+	console.log("strIMG: " + strIMG);
+	// ojo $("#answer-image").html("<h3>" + compImageName + "</h3>");
+
 	// Display correct answer message
 	strH4 = "";
-	strH4 = "<h4 id=\"answer-text\">" + correctAnswerMsg + "!</h4>";
+	strH4 = "<h4 id=\"answer-text\">" + correctAnswerMsg + "</h4>";
 	// Debugging
 	console.log("strH4: " + strH4);
 	$("#answer-text").html(strH4);
-
-	// Display correct answer image
-	// Debugging
-	console.log("compImageName: " + compImageName);
-	$("#answer-image").html("<img id=\"answer-image\" src=\"./assets/images/" + compImageName + "\">");
-
-	// Wait for 3 seconds
-	delayGame = setTimeout(adjustTimers(), 3000);
 
 }
 
@@ -457,10 +451,31 @@ function displayStats() {
 
 	// Display Start Over button
 	$("#restart-button").append("<button id=\"restart-button\" type=\"button\" class=\"btn btn-info btn-lg btn-block\">Start Over?</button>");
+}
 
-	// Wait for 3 seconds
-	delayGame = setTimeout(adjustTimers(), 3000);
+// Function to delay the showing of results before going to the next trivia question
+function delayDisplay() {
 
+	// Clear dynamic HTML elements
+	clearElements();
+
+	// Pick NEXT trivia question with answers
+	pickQuestion();
+
+	// Adjust game timer after delaying game for 10 seconds
+	gameTime += 10;
+
+	// Reset time for answering trivia question back to 30 seconds
+	questionTime = 30;
+
+	// Render NEXT trivia question and answers (buttons)
+	renderQuestionAnswers();
+}
+
+// Function to adjust timers after delaying game for 10 seconds
+function adjustTimers() {
+	gameTime += 10;
+	questionTime += 10;
 }
 
 // MAIN PROCESS
@@ -471,7 +486,7 @@ window.onload = (function () {
 
 	// Check if game hasn't timed out yet
 	if (!isGameTimeout) {
-	
+
 		//console.log("main() --> Start of game!");
 
 		$("#start-button").append("<button id=\"start-button\" type=\"button\" class=\"btn btn-info btn-lg btn-block\">Start</button>");
@@ -509,19 +524,9 @@ window.onload = (function () {
 
 				// Validate answer chosen for trivia question and display results
 				validateAnswerChosen();
-				clearTimeout(delayGame);
 
-				// Clear dynamic HTML elements
-				clearElements();
+				setTimeout(delayDisplay, 5000);
 
-				// Pick NEXT trivia question with answers
-				pickQuestion();
-
-				// Reset time for answering trivia question back to 30 seconds
-				questionTime = 30;
-
-				// Render NEXT trivia question and answers (buttons)
-				renderQuestionAnswers();
 			});
 		});
 	}
@@ -532,7 +537,8 @@ window.onload = (function () {
 
 		// Display game Stats
 		displayStats();
-		clearTimeout(delayGame);
+
+		setTimeout(displayStats, 5000);
 
 		isGameTimeout = false;
 
@@ -546,7 +552,7 @@ window.onload = (function () {
 			$("#restart-button").empty();
 
 			// Reset timers
-			gameTime = 90; 
+			gameTime = 90;
 			questionTime = 30;
 
 			// Set the timers for the game after 1 second
@@ -557,6 +563,4 @@ window.onload = (function () {
 		});
 	}
 });
-
-
 

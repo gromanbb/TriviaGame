@@ -29,6 +29,10 @@ body,
 	width: 35%;
 }
 
+#answer-img {
+	width: 100%;
+}
+
 #restart-button {
 	width: 100%;
 }
